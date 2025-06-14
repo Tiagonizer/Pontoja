@@ -8,7 +8,7 @@
   <h2 class="mb-4">Listagem de Funcionários</h2>
   
   <div class="mb-3">
-    <a href="/funcionarios/novo" class="btn btn-primary">Adicionar Funcionário</a>
+    <a href="/empregados/cadastrar" class="btn btn-primary">Adicionar Funcionário</a>
   </div>
 
   <table class="table table-striped table-bordered">
@@ -27,10 +27,10 @@
         <td th:text="${funcionario.id}">1</td>
         <td th:text="${funcionario.nome}">null</td>
         <td th:text="${funcionario.email}">null</td>
-        <td>Analista</td>
+        <td th:text="${funcionario.role}">null</td>
         <td>
-          <a href="/funcionarios/1/editar" class="btn btn-sm btn-warning">Editar</a>
-          <a href="/funcionarios/1/excluir" class="btn btn-sm btn-danger">Excluir</a>
+          <a th:href="@{/empregados/editar/{id}(id=${funcionario.id})}" class="btn btn-sm btn-warning">Editar</a>
+          <a th:href="@{/empregados/excluir/{id}(id=${funcionario.id})}" class="btn btn-sm btn-danger">Excluir</a>
         </td>
       </tr>
       <!-- Repita as linhas acima para cada funcionário -->
