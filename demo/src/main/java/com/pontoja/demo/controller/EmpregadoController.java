@@ -1,14 +1,16 @@
 package com.pontoja.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.pontoja.demo.model.Empregado;
 import com.pontoja.demo.repository.EmpregadoRepository;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/empregados")
+@Controller
+//@RequestMapping("/api/empregados")
 @CrossOrigin(origins = "*")
 public class EmpregadoController {
 
@@ -21,8 +23,10 @@ public class EmpregadoController {
     }
 
     @GetMapping
-    public List<Empregado> listarTodos() {
-        return empregadoRepository.findAll();
+    public String listarTodos(Model model) {
+        List<Empregado> empregados = empregadoRepository.findAll();
+        model.addAttribute("empregados", empregados);
+        return "listafuncionarios";
     }
 
     @PostMapping("/login")
