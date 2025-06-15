@@ -5,12 +5,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-5">
+    <div th:replace="fragments/topo :: topo-usuario"></div>
+    <div class="d-flex justify-content-end mb-3">
+    </div>
     <h2 class="mb-4">Registro de Ponto</h2>
 
     <form th:action="@{/ponto/registrar}" method="post" class="mb-4">
         <div class="mb-3">
-            <label for="empregadoId" class="form-label">ID do Funcionário</label>
-            <input type="text" class="form-control" id="empregadoId" name="empregadoId" required>
+            <label for="justificativa" class="form-label">Justificativa (caso necessário)</label>
+            <input type="text" class="form-control" id="justificativa" name="justificativa" maxlength="255" placeholder="Explique o motivo do atraso ou falta de registro">
         </div>
         <button type="submit" class="btn btn-success">Registrar Ponto</button>
     </form>
@@ -21,12 +24,16 @@
             <tr>
                 <th>ID Funcionário</th>
                 <th>Data e Hora</th>
+                <th>Justificativa</th>
+                <th>Tipo</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="ponto : ${pontos}">
                 <td th:text="${ponto.empregado.nome}">1</td>
                 <td th:text="${#temporals.format(ponto.dataHora, 'dd/MM/yyyy HH:mm:ss')}">01/01/2024 08:00:00</td>
+                <td th:text="${ponto.justificativa}">-</td>
+                <td th:text="${ponto.tipo}"></td>
             </tr>
         </tbody>
     </table>

@@ -1,0 +1,8 @@
+<div th:fragment="topo-usuario">
+    <div class="d-flex justify-content-end align-items-center mb-3">
+        <span th:if="${empregado != null}" class="me-3" th:text="${empregado.nome} + ' | Funcionário'"></span>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+        </form>
+    </div>
+</div>

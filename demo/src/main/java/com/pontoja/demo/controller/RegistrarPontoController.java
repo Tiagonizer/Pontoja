@@ -9,6 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,19 +28,45 @@ public class RegistrarPontoController {
 
     @GetMapping("/listar")
     public String listarPontos(Model model) {
-        List<RegistrarPonto> pontos = registrarPontoRepository.findAll();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Empregado empregado = empregadoRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Empregado não encontrado: " + username));
+        List<RegistrarPonto> pontos = registrarPontoRepository.findByEmpregado_Id(empregado.getId());
+        model.addAttribute("empregado", empregado);
         model.addAttribute("pontos", pontos);
         return "registrarponto";
     }
 
     @PostMapping("/registrar")
-    public String registrarPonto(@RequestParam String empregadoId) {
+    public String registrarPonto(@RequestParam(value = "justificativa", required = false) String justificativa) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Empregado empregado = empregadoRepository.findByEmail(username)
+                .orElseThrow(() -> new IllegalArgumentException("Empregado não encontrado: " + username));
+
+        // Descobre quantos pontos já foram registrados hoje
+        LocalDate hoje = LocalDate.now();
+        LocalDateTime inicio = hoje.atStartOfDay();
+        LocalDateTime fim = hoje.plusDays(1).atStartOfDay();
+        List<RegistrarPonto> pontosHoje = registrarPontoRepository.findByEmpregado_IdAndDataHoraBetween(
+            empregado.getId(), inicio, fim
+        );
+
+        String tipo = pontosHoje.size() % 2 == 0 ? "ENTRADA" : "SAIDA";
+
         RegistrarPonto ponto = new RegistrarPonto();
-        Empregado empregado = empregadoRepository.findById(empregadoId)
-                .orElseThrow(() -> new IllegalArgumentException("Empregado não encontrado: " + empregadoId));
         ponto.setEmpregado(empregado);
         ponto.setDataHora(LocalDateTime.now());
+        ponto.setJustificativa(justificativa);
+        ponto.setTipo(tipo);
         registrarPontoRepository.save(ponto);
+        return "redirect:/ponto/listar";
+    }
+
+    @PostMapping("/cadastrar")
+    public String cadastrar(@ModelAttribute Empregado empregado) {
+        empregadoRepository.save(empregado);
         return "redirect:/ponto/listar";
     }
 }

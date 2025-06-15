@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -21,6 +22,8 @@ public class Empregado implements UserDetails {
     private String email;
     private String senha;
     private UserRole role; // Enum UserRole
+    private LocalTime horaEntrada;
+    private LocalTime horaSaida;
 
     // Getters e Setters
     public String getId() {
@@ -57,6 +60,11 @@ public class Empregado implements UserDetails {
     public void setRole(UserRole role) {
         this.role = role;
     }
+
+    public LocalTime getHoraEntrada() { return horaEntrada; }
+    public void setHoraEntrada(LocalTime horaEntrada) { this.horaEntrada = horaEntrada; }
+    public LocalTime getHoraSaida() { return horaSaida; }
+    public void setHoraSaida(LocalTime horaSaida) { this.horaSaida = horaSaida; }
 
     // Métodos da interface UserDetails
 

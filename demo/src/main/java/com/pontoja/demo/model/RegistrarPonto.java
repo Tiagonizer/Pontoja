@@ -15,6 +15,10 @@ public class RegistrarPonto {
 
     private LocalDateTime dataHora;
 
+    private String justificativa;
+
+    private String tipo; // "ENTRADA" ou "SAIDA"
+
     // Getters e Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -24,4 +28,10 @@ public class RegistrarPonto {
 
     public LocalDateTime getDataHora() { return dataHora; }
     public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
+
+    public String getJustificativa() { return justificativa; }
+    public void setJustificativa(String justificativa) { this.justificativa = justificativa; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
 }

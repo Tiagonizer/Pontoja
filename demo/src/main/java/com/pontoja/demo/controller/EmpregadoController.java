@@ -2,7 +2,9 @@ package com.pontoja.demo.controller;
 
 import com.pontoja.demo.model.Empregado;
 import com.pontoja.demo.model.Empregado.UserRole;
+import com.pontoja.demo.model.RegistrarPonto;
 import com.pontoja.demo.repository.EmpregadoRepository;
+import com.pontoja.demo.repository.RegistrarPontoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,9 @@ public class EmpregadoController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RegistrarPontoRepository registrarPontoRepository;
 
     @PostMapping("/cadastrar")
     public String cadastrar(@ModelAttribute Empregado empregado) {
@@ -72,5 +77,23 @@ public class EmpregadoController {
     public String excluirEmpregado(@PathVariable String id) {
         empregadoRepository.deleteById(id);
         return "redirect:/empregados/listar";
+    }
+
+    @GetMapping("/{id}/pontos")
+    public String listarPontosFuncionario(@PathVariable String id,
+                                          @RequestParam(required = false) String tipo,
+                                          Model model) {
+        Empregado funcionario = empregadoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Funcionário não encontrado: " + id));
+        List<RegistrarPonto> pontos;
+        if (tipo != null && !tipo.isBlank()) {
+            pontos = registrarPontoRepository.findByEmpregado_IdAndTipo(id, tipo);
+        } else {
+            pontos = registrarPontoRepository.findByEmpregado_Id(id);
+        }
+        model.addAttribute("funcionario", funcionario);
+        model.addAttribute("pontos", pontos);
+        model.addAttribute("tipo", tipo);
+        return "pontos-funcionario";
     }
 }
